@@ -1,15 +1,15 @@
 import { Switch, Route, Redirect } from 'react-router-dom';
-import Sidebar from 'components/Sidebar';
-import Dashboard from 'pages/Dashboard';
+import Sidebar from './components/Sidebar';
+import Dashboard from './pages/Dashboard';
 
 // Tailwind CSS Style Sheet
-import 'assets/styles/tailwind.css';
-import ExampleChart2 from 'pages/ExampleChart2';
-import ExampleChart1 from 'pages/ExampleChart1';
-import ExampleChart3 from 'pages/ExampleChart3';
-import ExampleChart4 from 'pages/ExampleChart4';
-import ExampleChart5 from 'pages/ExampleChart5';
-import ExampleChart6 from 'pages/ExampleChart6';
+import './assets/styles/tailwind.css';
+import ExampleChart2 from './pages/ExampleChart2';
+import ExampleChart1 from './pages/ExampleChart1';
+import ExampleChart3 from './pages/ExampleChart3';
+import ExampleChart4 from './pages/ExampleChart4';
+import ExampleChart5 from './pages/ExampleChart5';
+import ExampleChart6 from './pages/ExampleChart6';
 
 function App() {
     return (

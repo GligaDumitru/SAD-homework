@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from "react";
 import { readRemoteFile } from "react-papaparse";
 import Input from "@material-tailwind/react/Input";
 import Alert from "@material-tailwind/react/Alert";
-import Example6 from "components/Example6";
+import Example6 from "../components/Example6";
 
 export default function ExampleChart6() {
   const [url, setUrl] = useState(

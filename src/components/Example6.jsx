@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ChartLine from "components/ChartLine";
+import ChartLine from "./ChartLine";
 import Paragraph from "@material-tailwind/react/Paragraph";
 import Radio from "@material-tailwind/react/radio";
 import Button from "@material-tailwind/react/Button";

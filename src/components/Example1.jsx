@@ -4,6 +4,7 @@ import Paragraph from "@material-tailwind/react/Paragraph";
 import Radio from "@material-tailwind/react/radio";
 import Button from "@material-tailwind/react/Button";
 import Icon from "@material-tailwind/react/Icon";
+import { IGNORE_FIELDS } from "../utils/helper";
 
 const COLORS = [
   "red",
@@ -27,8 +28,6 @@ const Example1 = (props) => {
   const [toggleShowChart, setToggleShowChart] = useState(false);
 
   const title = "Evidentierea ponderii bolnavilor pe tipuri de bolnavi";
-
-  const fieldsToShow2 = ["ID_SPITAL", "duration"];
 
   const defeaultOptionsConfig = {
     maintainAspectRatio: false,
@@ -118,7 +117,7 @@ const Example1 = (props) => {
         indexForValue: index,
         value: hA,
       }))
-      .filter((item) => !fieldsToShow2.includes(item.value));
+      .filter((item) => !IGNORE_FIELDS.includes(item.value));
 
     // show the id's of ospitals by id_spital
     let labelsArray = informationArray.map((lA) => lA[0]);
@@ -169,9 +168,9 @@ const Example1 = (props) => {
   };
 
   return (
-    <div className="px-3 md:px-8 mt-24">
+    <div className="px-2 md:px-8 mt-24">
       <div className="container mx-auto mb-16 max-w-full bg-gray-200">
-        <div className="p-8 m-2">
+        <div className="p-1 md:p-8 md:m-2">
           <div className="flex justify-between items-center">
             <Paragraph color="cyan">
               1. Evidentierea ponderii bolnavilor pe tipuri de bolnavi (tineri,
@@ -195,7 +194,7 @@ const Example1 = (props) => {
           </div>
 
           <div className={`${toggleShowChart && "hidden "} `}>
-            <div className="flex my-4">
+            <div className="md:flex md:my-4">
               {["line", "bar", "horizontalBar", "radar"].map((item, index) => (
                 <div className="inline-block p-2 m-2 ">
                   <Radio

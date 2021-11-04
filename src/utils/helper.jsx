@@ -1,0 +1,1 @@
+export const IGNORE_FIELDS = ['ID_SPITAL', 'durata', 'id_zi', 'TIP']

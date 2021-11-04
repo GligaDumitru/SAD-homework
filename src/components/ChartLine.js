@@ -29,7 +29,7 @@ export default function ChartLine({
 
   return (
     <Card>
-      <CardHeader color="cyan" contentPosition="left">
+      <CardHeader color="cyan" contentPosition="left" className="h-auto">
         <h6 className="uppercase text-gray-200 text-xs font-medium">{main}</h6>
         <h2 className="text-white text-2xl">{title}</h2>
       </CardHeader>

@@ -3,6 +3,7 @@ import { readRemoteFile } from "react-papaparse";
 import Input from "@material-tailwind/react/Input";
 import Alert from "@material-tailwind/react/Alert";
 import Example2 from "../components/Example2";
+import CustomTable from '../components/CustomTable'
 
 export default function ExampleChart2() {
   const [url, setUrl] = useState(
@@ -21,6 +22,7 @@ export default function ExampleChart2() {
             setErrors(results.errors);
           }
           if (results.data && results.data.length > 0) {
+            console.log(results.data)
             setData(results.data);
           }
         },
@@ -58,6 +60,7 @@ export default function ExampleChart2() {
       </div>
       {data && data.length > 0 && <Example2 data={data} />}
       {errors.length > 0 && <>{JSON.stringify(errors)}</>}
+      
     </>
   );
 }

@@ -4,7 +4,8 @@ import Paragraph from "@material-tailwind/react/Paragraph";
 import Radio from "@material-tailwind/react/radio";
 import Button from "@material-tailwind/react/Button";
 import Icon from "@material-tailwind/react/Icon";
-import { IGNORE_FIELDS } from "../utils/helper";
+import DownloadExample2 from "./CustomDownload/DownloadExample2";
+import Checkbox from "@material-tailwind/react/Checkbox";
 
 const COLORS = [
   "red",
@@ -31,7 +32,22 @@ const Example2 = (props) => {
   const [labelsArrayConfig, setLabelsArrayConfig] = useState(null);
   const [dataSetsArray, setDataSetsArrayConfig] = useState(null);
   const [toggleShowChart, setToggleShowChart] = useState(false);
+  const [ignoredFields, setIgnoredfields] = useState([
+    "ID_SPITAL",
+    "durata",
+    "id_zi",
+    "TIP",
+  ]);
+  let IGNORE_FIELDS = ["ID_SPITAL", "durata", "id_zi", "TIP"];
 
+  const [updateTable, setUpdateTable] = useState(false);
+  const FIELD_AVAILABLE = [
+    "osteoporoza",
+    "scleroza",
+    "covid",
+    "diabet",
+    "cancer",
+  ];
   const title = "Determinarea celor mai frecvente diagnostice";
 
   const defeaultOptionsConfig = {
@@ -104,10 +120,9 @@ const Example2 = (props) => {
       ],
     },
   };
+  const { data } = props;
 
   useEffect(() => {
-    const { data } = props;
-
     // create clone
     let informationArray = JSON.parse(JSON.stringify(data));
     // remove first row, with headers
@@ -122,7 +137,7 @@ const Example2 = (props) => {
         indexForValue: index,
         value: hA,
       }))
-      .filter((item) => !IGNORE_FIELDS.includes(item.value));
+      .filter((item) => !ignoredFields.includes(item.value));
 
     // show the id's of ospitals by id_spital
     let labelsArray = informationArray.map((lA) => lA[0]);
@@ -151,7 +166,7 @@ const Example2 = (props) => {
     setOptionsConfig(defeaultOptionsConfig);
     setLabelsArrayConfig(labelsArray);
     setDataSetsArrayConfig(dataSetsArray);
-  }, [props]);
+  }, [props, updateTable]);
 
   const handleChangeChart = (item) => {
     switch (item) {
@@ -172,13 +187,28 @@ const Example2 = (props) => {
     setTypeChart(item);
   };
 
+  const handleCheckboxChange = (value) => {
+    if (!ignoredFields.includes(value)) {
+      let _tArr = [...ignoredFields];
+      _tArr.push(value);
+      setIgnoredfields(_tArr);
+    } else if (ignoredFields.includes(value)) {
+      let _tArr = [...ignoredFields];
+      const index = _tArr.indexOf(value);
+      _tArr.splice(index, 1);
+      setIgnoredfields(_tArr);
+    }
+
+    setUpdateTable(!updateTable);
+  };
+
   return (
     <div className="px-2 md:px-8 mt-24">
       <div className="container mx-auto mb-16 max-w-full bg-gray-200">
         <div className="p-1 md:p-8 md:m-2">
           <div className="flex justify-between items-center">
             <Paragraph color="cyan">
-              2. Determinarea celor mai frecvente diagnostice in ultime 30 zile, mergand din 7 in 7 zile
+            Preview
             </Paragraph>
             <Button
               color={`${!toggleShowChart ? "red" : "blue"}`}
@@ -198,6 +228,26 @@ const Example2 = (props) => {
           </div>
 
           <div className={`${toggleShowChart && "hidden "} `}>
+            <div className="md:flex my-4">
+              {FIELD_AVAILABLE.map((el, index) => {
+                return (
+                  <div key={index} className="m-2">
+                    <Checkbox
+                      color="lightBlue"
+                      text={el.toUpperCase()}
+                      id={`checkboxid-${index}`}
+                      onChange={() => handleCheckboxChange(el)}
+                      checked={!ignoredFields.includes(el)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            {data && (
+              <DownloadExample2 ignoredFields={ignoredFields} data={data} />
+            )}
+
             <div className="md:flex my-4">
               {["line", "bar", "horizontalBar", "radar"].map((item, index) => (
                 <div className="inline-block p-2 m-2 ">

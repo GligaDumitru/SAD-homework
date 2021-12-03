@@ -25,7 +25,7 @@ export default function Sidebar() {
             <hr className="my-4 min-w-full" />
 
             <ul className="flex-col min-w-full flex list-none">
-              {[1, 2, 3, 4, 5, 6].map((example, index) => (
+              {[1, 2, 4, 5, 6].map((example, index) => (
                 <li key={index} className="rounded-lg mb-4">
                   <NavLink
                     to={`/example${example}`}

@@ -1,1 +1,1 @@
-export const IGNORE_FIELDS = ['ID_SPITAL', 'durata', 'id_zi', 'TIP']
+export const IGNORE_FIELDS = ['ID_SPITAL', 'durata', 'id_zi', 'TIP', 'covid', 'diabet', 'cancer']

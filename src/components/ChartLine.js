@@ -34,7 +34,7 @@ export default function ChartLine({
         <h2 className="text-white text-2xl">{title}</h2>
       </CardHeader>
       <CardBody>
-        <div className={`relative ${type === 'radar' ? 'h-500' : 'h-96'}`}>
+        <div className={`relative ${type === 'radar' ? 'h-300' : 'h-96'}`}>
           <canvas id="customChartID"></canvas>
         </div>
       </CardBody>

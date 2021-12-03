@@ -5,6 +5,9 @@ import Radio from "@material-tailwind/react/radio";
 import Button from "@material-tailwind/react/Button";
 import Icon from "@material-tailwind/react/Icon";
 import { IGNORE_FIELDS } from "../utils/helper";
+import SimpleExcelExport from "./SimpleExcelExport";
+import Checkbox from "@material-tailwind/react/Checkbox";
+import DownloadExample1 from "./CustomDownload/DownloadExample1";
 
 const COLORS = [
   "red",
@@ -26,7 +29,19 @@ const Example1 = (props) => {
   const [labelsArrayConfig, setLabelsArrayConfig] = useState(null);
   const [dataSetsArray, setDataSetsArrayConfig] = useState(null);
   const [toggleShowChart, setToggleShowChart] = useState(false);
-
+  const [ignoredFields, setIgnoredfields] = useState([
+    "ID_SPITAL",
+    "durata",
+    "id_zi",
+    "TIP",
+  ]);
+  const [updateTable, setUpdateTable] = useState(false);
+  const FIELD_AVAILABLE = [
+    "ADULT_SCORE",
+    "TINERI_SCORE",
+    "VENITURI_MICI_SCORE",
+    "VENITURI_MARI_SCORE",
+  ];
   const title = "Evidentierea ponderii bolnavilor pe tipuri de bolnavi";
 
   const defeaultOptionsConfig = {
@@ -100,8 +115,9 @@ const Example1 = (props) => {
     },
   };
 
+  const { data } = props;
+
   useEffect(() => {
-    const { data } = props;
 
     // create clone
     let informationArray = JSON.parse(JSON.stringify(data));
@@ -117,7 +133,7 @@ const Example1 = (props) => {
         indexForValue: index,
         value: hA,
       }))
-      .filter((item) => !IGNORE_FIELDS.includes(item.value));
+      .filter((item) => !ignoredFields.includes(item.value));
 
     // show the id's of ospitals by id_spital
     let labelsArray = informationArray.map((lA) => lA[0]);
@@ -146,7 +162,7 @@ const Example1 = (props) => {
     setOptionsConfig(defeaultOptionsConfig);
     setLabelsArrayConfig(labelsArray);
     setDataSetsArrayConfig(dataSetsArray);
-  }, [props]);
+  }, [props, updateTable]);
 
   const handleChangeChart = (item) => {
     switch (item) {
@@ -167,33 +183,95 @@ const Example1 = (props) => {
     setTypeChart(item);
   };
 
+  const downloadChart = () => {
+    var pageHTML = window.document.getElementById("chart12345").innerHTML;
+    let data = new Blob([pageHTML], { type: "data:attachment/text," });
+    let csvURL = window.URL.createObjectURL(data);
+    let tempLink = document.createElement("a");
+    tempLink.href = csvURL;
+    tempLink.setAttribute("download", "Graph.html");
+    tempLink.click();
+  };
+
+  const handleCheckboxChange = (value) => {
+    if (!ignoredFields.includes(value)) {
+      let _tArr = [...ignoredFields];
+      _tArr.push(value);
+      setIgnoredfields(_tArr);
+    } else if (ignoredFields.includes(value)) {
+      let _tArr = [...ignoredFields];
+      const index = _tArr.indexOf(value);
+      _tArr.splice(index, 1);
+      setIgnoredfields(_tArr);
+    }
+
+    setUpdateTable(!updateTable);
+  };
+
   return (
     <div className="px-2 md:px-8 mt-24">
       <div className="container mx-auto mb-16 max-w-full bg-gray-200">
         <div className="p-1 md:p-8 md:m-2">
           <div className="flex justify-between items-center">
             <Paragraph color="cyan">
-              1. Evidentierea ponderii bolnavilor pe tipuri de bolnavi (tineri,
-              adulti, venituri mari, venituri reduse etc.)
+              Preview
             </Paragraph>
-            <Button
-              color={`${!toggleShowChart ? "red" : "blue"}`}
-              buttonType="outline"
-              size="regular"
-              rounded={true}
-              block={false}
-              iconOnly={true}
-              ripple="dark"
-              onClick={() => setToggleShowChart(!toggleShowChart)}
-            >
-              <Icon
-                name={`${!toggleShowChart ? "arrow_upward" : "arrow_downward"}`}
-                size="sm"
-              />
-            </Button>
+            <div className="flex">
+              <Button
+                color="blue"
+                buttonType="outline"
+                size="regular"
+                rounded={true}
+                block={false}
+                iconOnly={false}
+                ripple="dark"
+                onClick={() => downloadChart()}
+              >
+                Download .html
+                <Icon name="arrow_downward" size="sm" />
+              </Button>
+              <div className="inline-block mr-2">
+                <SimpleExcelExport />
+              </div>
+              <Button
+                color={`${!toggleShowChart ? "red" : "blue"}`}
+                buttonType="outline"
+                size="regular"
+                rounded={true}
+                block={false}
+                iconOnly={true}
+                ripple="dark"
+                onClick={() => setToggleShowChart(!toggleShowChart)}
+              >
+                <Icon
+                  name={`${
+                    !toggleShowChart ? "arrow_upward" : "arrow_downward"
+                  }`}
+                  size="sm"
+                />
+              </Button>
+            </div>
           </div>
 
           <div className={`${toggleShowChart && "hidden "} `}>
+          <div className="md:flex my-4">
+              {FIELD_AVAILABLE.map((el, index) => {
+                return (
+                  <div key={index} className="m-2">
+                    <Checkbox
+                      color="lightBlue"
+                      text={el.toUpperCase()}
+                      id={`checkboxid-${index}`}
+                      onChange={() => handleCheckboxChange(el)}
+                      checked={!ignoredFields.includes(el)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            {data && (
+              <DownloadExample1 ignoredFields={ignoredFields} data={data} />
+            )}
             <div className="md:flex md:my-4">
               {["line", "bar", "horizontalBar", "radar"].map((item, index) => (
                 <div className="inline-block p-2 m-2 ">
@@ -209,7 +287,7 @@ const Example1 = (props) => {
                 </div>
               ))}
             </div>
-            <div className="mt-12">
+            <div id="chart12345" className="mt-12">
               {typeChart && (
                 <ChartLine
                   title={title}

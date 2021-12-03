@@ -3,6 +3,7 @@ import { readRemoteFile } from "react-papaparse";
 import Input from "@material-tailwind/react/Input";
 import Alert from "@material-tailwind/react/Alert";
 import Example1 from "../components/Example1";
+import SimpleExcelExport from '../components/SimpleExcelExport'
 
 export default function ExampleChart1() {
   const [url, setUrl] = useState(
@@ -14,8 +15,10 @@ export default function ExampleChart1() {
   const [errors, setErrors] = useState([]);
 
   useEffect(() => {
+    const urlTo = `https://docs.google.com/spreadsheets/d/${url}/gviz/tq?tqx=out:csv&tq&gid=${gid}`;
+
     readRemoteFile(
-      `https://docs.google.com/spreadsheets/d/${url}/gviz/tq?tqx=out:csv&tq&gid=${gid}`,
+      urlTo,
       {
         complete: (results) => {
           if (results.errors && results.errors.length > 0) {
@@ -59,7 +62,7 @@ export default function ExampleChart1() {
           />
         </div>
       </div>
-      {data && data.length > 0 && <Example1 data={data} />}
+      {data && data.length > 0 && <><Example1 data={data} /></>}
       {errors.length > 0 && <>{JSON.stringify(errors)}</>}
     </>
   );

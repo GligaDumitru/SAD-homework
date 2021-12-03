@@ -4,7 +4,8 @@ import Paragraph from "@material-tailwind/react/Paragraph";
 import Radio from "@material-tailwind/react/radio";
 import Button from "@material-tailwind/react/Button";
 import Icon from "@material-tailwind/react/Icon";
-import { IGNORE_FIELDS } from "../utils/helper";
+import DownloadExample5 from "./CustomDownload/DownloadExample5";
+import Checkbox from "@material-tailwind/react/Checkbox";
 
 const COLORS = [
   "red",
@@ -33,7 +34,22 @@ const Example5 = (props) => {
   const [toggleShowChart, setToggleShowChart] = useState(false);
 
   const title = "Evidentierea ponderii bolnavilor de tipuri/subtipuri/clase de afectiuni";
+  const [ignoredFields, setIgnoredfields] = useState([
+    "ID_SPITAL",
+    "durata",
+    "id_zi",
+    "TIP",
+  ]);
+  let IGNORE_FIELDS = ["ID_SPITAL", "durata", "id_zi", "TIP"];
 
+  const [updateTable, setUpdateTable] = useState(false);
+  const FIELD_AVAILABLE = [
+    "OSTEOPOROZA",
+    "SCLEROZA",
+    "COVID",
+    "DIABET",
+    "CANCER",
+  ];
   const defeaultOptionsConfig = {
     maintainAspectRatio: false,
     responsive: true,
@@ -104,9 +120,10 @@ const Example5 = (props) => {
       ],
     },
   };
+  const { data } = props;
+
 
   useEffect(() => {
-    const { data } = props;
 
     // create clone
     let informationArray = JSON.parse(JSON.stringify(data));
@@ -122,7 +139,7 @@ const Example5 = (props) => {
         indexForValue: index,
         value: hA,
       }))
-      .filter((item) => !IGNORE_FIELDS.includes(item.value));
+      .filter((item) => !ignoredFields.includes(item.value));
 
     // show the id's of ospitals by id_spital
     let labelsArray = informationArray.map((lA) => lA[0]);
@@ -151,7 +168,7 @@ const Example5 = (props) => {
     setOptionsConfig(defeaultOptionsConfig);
     setLabelsArrayConfig(labelsArray);
     setDataSetsArrayConfig(dataSetsArray);
-  }, [props]);
+  }, [props, updateTable]);
 
   const handleChangeChart = (item) => {
     switch (item) {
@@ -171,15 +188,27 @@ const Example5 = (props) => {
     }
     setTypeChart(item);
   };
+  const handleCheckboxChange = (value) => {
+    if (!ignoredFields.includes(value)) {
+      let _tArr = [...ignoredFields];
+      _tArr.push(value);
+      setIgnoredfields(_tArr);
+    } else if (ignoredFields.includes(value)) {
+      let _tArr = [...ignoredFields];
+      const index = _tArr.indexOf(value);
+      _tArr.splice(index, 1);
+      setIgnoredfields(_tArr);
+    }
 
+    setUpdateTable(!updateTable);
+  };
   return (
     <div className="px-2 md:px-8 mt-24">
       <div className="container mx-auto mb-16 max-w-full bg-gray-200">
         <div className="p-1 md:p-8 md:m-2">
           <div className="flex justify-between items-center">
             <Paragraph color="cyan">
-              5.Evidentierea ponderii bolnavilor de
-tipuri/subtipuri/clase de afectiuni
+            Preview
             </Paragraph>
             <Button
               color={`${!toggleShowChart ? "red" : "blue"}`}
@@ -199,6 +228,25 @@ tipuri/subtipuri/clase de afectiuni
           </div>
 
           <div className={`${toggleShowChart && "hidden "} `}>
+          <div className="md:flex my-4">
+              {FIELD_AVAILABLE.map((el, index) => {
+                return (
+                  <div key={index} className="m-2">
+                    <Checkbox
+                      color="lightBlue"
+                      text={el.toUpperCase()}
+                      id={`checkboxid-${index}`}
+                      onChange={() => handleCheckboxChange(el)}
+                      checked={!ignoredFields.includes(el)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            {data && (
+              <DownloadExample5 ignoredFields={ignoredFields} data={data} />
+            )}
             <div className="md:flex my-4">
               {["line", "bar", "horizontalBar", "radar"].map((item, index) => (
                 <div className="inline-block p-2 m-2 ">

@@ -178,9 +178,7 @@ const Example3 = (props) => {
         <div className="p-1 md:p-8 md:m-2">
           <div className="flex justify-between items-center">
             <Paragraph color="cyan">
-              3.Estimarea numarului de paturi necesare in perioada
-urmatoare, pe tipuri de bolnavi si pe tipuri de
-afectiuni
+            Preview
             </Paragraph>
             <Button
               color={`${!toggleShowChart ? "red" : "blue"}`}
